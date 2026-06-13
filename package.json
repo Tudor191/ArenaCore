@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "CS competitive tournaments tracker with HLTV data",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev-open.js",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
