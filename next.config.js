@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ["hltv", "got-scraping", "header-generator", "node-cron"],
+  experimental: {
+    serverComponentsExternalPackages: ["hltv", "got-scraping", "header-generator", "node-cron"],
+  },
   images: {
     remotePatterns: [
       {
