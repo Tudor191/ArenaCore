@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Team {
+  id          Int      @id
+  name        String
+  slug        String   @unique
+  logoUrl     String?
+  country     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rankings    TeamRanking[]
+  eventTeams  EventTeam[]
+  matchTeam1  Match[]       @relation("MatchTeam1")
+  matchTeam2  Match[]       @relation("MatchTeam2")
+  matchWinner Match[]       @relation("MatchWinner")
+}
+
+model TeamRanking {
+  id        Int      @id @default(autoincrement())
+  teamId    Int
+  rank      Int
+  points    Int?
+  date      DateTime
+
+  team      Team     @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, date])
+  @@index([date])
+  @@index([rank])
+}
+
+model Event {
+  id            Int       @id
+  name          String
+  slug          String?
+  startDate     DateTime
+  endDate       DateTime?
+  prizePool     String?
+  location      String?
+  format        String?
+  logoUrl       String?
+  numberOfTop10 Int       @default(0)
+  isQualified   Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  teams   EventTeam[]
+  stages  EventStage[]
+  matches Match[]
+}
+
+model EventTeam {
+  id        Int     @id @default(autoincrement())
+  eventId   Int
+  teamId    Int
+  seed      Int?
+  placement Int?
+  isTop10   Boolean @default(false)
+
+  event Event @relation(fields: [eventId], references: [id])
+  team  Team  @relation(fields: [teamId], references: [id])
+
+  @@unique([eventId, teamId])
+}
+
+model EventStage {
+  id      Int    @id @default(autoincrement())
+  eventId Int
+  name    String
+  type    String
+  order   Int
+
+  event   Event   @relation(fields: [eventId], references: [id])
+  matches Match[]
+}
+
+model Match {
+  id        Int      @id @default(autoincrement())
+  hltvId    Int?     @unique
+  eventId   Int
+  stageId   Int?
+  team1Id   Int
+  team2Id   Int
+  winnerId  Int?
+  score1    Int?
+  score2    Int?
+  date      DateTime?
+  format    String?
+  roundName String?
+
+  event   Event       @relation(fields: [eventId], references: [id])
+  stage   EventStage? @relation(fields: [stageId], references: [id])
+  team1   Team        @relation("MatchTeam1", fields: [team1Id], references: [id])
+  team2   Team        @relation("MatchTeam2", fields: [team2Id], references: [id])
+  winner  Team?       @relation("MatchWinner", fields: [winnerId], references: [id])
+
+  @@index([eventId])
+}
+
+model SyncLog {
+  id          Int       @id @default(autoincrement())
+  type        String
+  status      String
+  message     String?
+  startedAt   DateTime  @default(now())
+  finishedAt  DateTime?
+  itemsSynced Int       @default(0)
+}

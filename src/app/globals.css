@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cs-orange: #f4922a;
+  --color-cs-dark: #1a1a2e;
+  --color-cs-darker: #0f0f1a;
+  --color-cs-card: #16213e;
+  --color-cs-border: #2a2a4a;
+  --color-cs-text: #e0e0e0;
+  --color-cs-muted: #8888aa;
+}
+
+:root {
+  --cs-orange: #f4922a;
+  --cs-dark: #1a1a2e;
+  --cs-darker: #0f0f1a;
+  --cs-card: #16213e;
+  --cs-border: #2a2a4a;
+}
+
+body {
+  background-color: var(--cs-darker);
+  color: #e0e0e0;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Swiss bracket connector lines */
+.match-connector {
+  position: relative;
+}
+.match-connector::after {
+  content: "";
+  position: absolute;
+  right: -16px;
+  top: 50%;
+  width: 16px;
+  height: 1px;
+  background: #2a2a4a;
+}
