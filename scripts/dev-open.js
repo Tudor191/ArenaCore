@@ -6,14 +6,14 @@ const server = spawn("npx", ["next", "dev"], {
   shell: true,
 });
 
-let opened = false;
+let checking = false;
 
 const checkReady = setInterval(async () => {
-  if (opened) return;
+  if (checking) return;
+  checking = true;
   try {
     const res = await fetch("http://localhost:3000");
     if (res.status < 500) {
-      opened = true;
       clearInterval(checkReady);
       if (process.platform === "win32") {
         exec("start http://localhost:3000");
@@ -22,8 +22,10 @@ const checkReady = setInterval(async () => {
       } else {
         exec("xdg-open http://localhost:3000");
       }
+      return;
     }
   } catch {}
+  checking = false;
 }, 1000);
 
 server.on("close", () => clearInterval(checkReady));
