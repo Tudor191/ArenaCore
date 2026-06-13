@@ -1,7 +1,13 @@
-import { HLTV } from "hltv";
+import { HLTV as HltvBase } from "hltv";
+import { fetchWithStealth } from "./browser";
 import { prisma } from "./db";
 
-const DELAY_MS = 2500;
+// Use Puppeteer stealth to bypass Cloudflare
+const HLTV = HltvBase.createInstance({
+  loadPage: fetchWithStealth,
+});
+
+const DELAY_MS = 3000;
 const MIN_TOP10_TEAMS = 5;
 const START_YEAR = 2015;
 
