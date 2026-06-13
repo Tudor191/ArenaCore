@@ -6,10 +6,14 @@ const server = spawn("npx", ["next", "dev"], {
   shell: true,
 });
 
+let opened = false;
+
 const checkReady = setInterval(async () => {
+  if (opened) return;
   try {
     const res = await fetch("http://localhost:3000");
     if (res.status < 500) {
+      opened = true;
       clearInterval(checkReady);
       if (process.platform === "win32") {
         exec("start http://localhost:3000");
